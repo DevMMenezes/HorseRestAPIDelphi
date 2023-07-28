@@ -1,0 +1,22 @@
+program HorseAPI;
+
+uses
+  Vcl.Forms,
+  uMain in 'Source\uMain.pas' {uFrmMain},
+  uDM in 'Source\Connection\uDM.pas' {DM: TDataModule},
+  Router.Client in 'Source\Routers\Router.Client.pas',
+  Service.Client in 'Source\Services\Service.Client.pas',
+  Utils in 'Source\Utils\Utils.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  { Controle de Vazamento de Memória }
+  ReportMemoryLeaksOnShutdown := True;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TuFrmMain, uFrmMain);
+  Application.CreateForm(TDM, DM);
+  Application.Run;
+
+end.

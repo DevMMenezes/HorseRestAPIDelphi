@@ -1,0 +1,25 @@
+unit Utils;
+
+interface
+
+uses
+  SysUtils;
+
+procedure SaveLog(sMsg: String);
+
+implementation
+
+uses
+  uMain;
+
+{ TUtils }
+
+procedure SaveLog(sMsg: String);
+begin
+  with uFrmMain, mmLog do
+  begin
+    Lines.Add(DateTimeToStr(Now) + ' - ' + sMsg);
+  end;
+end;
+
+end.

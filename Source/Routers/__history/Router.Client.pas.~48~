@@ -1,0 +1,89 @@
+unit Router.Client;
+
+interface
+
+uses
+  Horse,
+  System.JSON;
+
+procedure LoadRouters;
+procedure pGetFindAll(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure pPostInsert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure pPutUpdate(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure pDelete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+
+implementation
+
+uses
+  Service.Client, System.SysUtils, Utils;
+
+procedure LoadRouters;
+begin
+
+  THorse.Get('/client', pGetFindAll);
+  THorse.Post('/client', pPostInsert);
+  THorse.Put('/client', pPutUpdate);
+  THorse.Delete('/client/:id', pDelete);
+
+end;
+
+procedure pGetFindAll(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  iStatusCode: Integer;
+begin
+  try
+    Res.Send<TJSONObject>(TServiceClient.New.FindAll(iStatusCode))
+      .Status(iStatusCode);
+
+  except
+    on E: Exception do
+      SaveLog(E.Message + 'Erro ao buscar todos os clientes');
+
+  end;
+
+end;
+
+procedure pPostInsert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  iStatusCode: Integer;
+begin
+  try
+    Res.Send<TJSONObject>(TServiceClient.New.Insert(Req.Body<TJSONObject>,
+      iStatusCode)).Status(iStatusCode);
+  except
+    on E: Exception do
+      SaveLog(E.Message + 'Erro ao Inserir os cliente');
+
+  end;
+
+end;
+
+procedure pPutUpdate(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  iStatusCode: Integer;
+begin
+  try
+    Res.Send<TJSONObject>(TServiceClient.New.Update(Req.Body<TJSONObject>,
+      iStatusCode)).Status(iStatusCode);
+  except
+    on E: Exception do
+      raise Exception.Create(E.Message + '#13' + 'Erro ao Alterar o cliente');
+  end;
+
+end;
+
+procedure pDelete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  iStatusCode: Integer;
+begin
+  try
+    Res.Send<TJSONObject>(TServiceClient.New.Delete(Req.Params.Field('id')
+      .AsInteger, iStatusCode)).Status(iStatusCode);
+  except
+    on E: Exception do
+      raise Exception.Create(E.Message + '#13' + 'Erro ao Deletar o cliente');
+  end;
+
+end;
+
+end.
