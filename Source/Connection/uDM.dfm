@@ -5,12 +5,13 @@ object DM: TDM
   object FDConnection: TFDConnection
     Params.Strings = (
       
-        'Database=C:\DevMMenezes\Projetos Pessoais\HorseRestAPI\Database\' +
-        'APIHORSE.FDB'
+        'Database=C:\DevMMenezes\Projetos Pessoais\HorseRestAPIDelphi\Dat' +
+        'abase\APIHORSE.FDB'
       'User_Name=sysdba'
       'Password=masterkey'
-      'DriverID=FB'
-      'Server=localhost')
+      'Server=localhost'
+      'DriverID=FB')
+    Connected = True
     LoginPrompt = False
     OnError = FDConnectionError
     Left = 80

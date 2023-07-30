@@ -8,6 +8,7 @@ uses
 
 procedure LoadRouters;
 procedure pGetFindAll(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+procedure pGetFindByID(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure pPostInsert(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure pPutUpdate(Req: THorseRequest; Res: THorseResponse; Next: TProc);
 procedure pDelete(Req: THorseRequest; Res: THorseResponse; Next: TProc);
@@ -21,9 +22,20 @@ procedure LoadRouters;
 begin
 
   THorse.Get('/client', pGetFindAll);
+  THorse.Get('/client/:id', pGetFindByID);
   THorse.Post('/client', pPostInsert);
   THorse.Put('/client', pPutUpdate);
   THorse.Delete('/client/:id', pDelete);
+
+end;
+
+procedure pGetFindByID(Req: THorseRequest; Res: THorseResponse; Next: TProc);
+var
+  iStatusCode: Integer;
+begin
+
+  Res.Send<TJSONObject>(TServiceClient.New.FindByID(Req.Params.Field('id')
+    .AsInteger, iStatusCode)).Status(iStatusCode);
 
 end;
 

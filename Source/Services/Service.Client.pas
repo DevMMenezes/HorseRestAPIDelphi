@@ -9,6 +9,7 @@ type
   IServiceClient = interface
     ['{C2493EFB-240E-49E9-B00E-A0EC08D4D43A}']
     function FindAll(var iStatusCode: Integer): TJsonObject;
+    function FindByID(aID: Integer; var iStatusCode: Integer): TJsonObject;
     function Insert(aBody: TJsonObject; var iStatusCode: Integer): TJsonObject;
     function Update(aBody: TJsonObject; var iStatusCode: Integer): TJsonObject;
     function Delete(aID: Integer; var iStatusCode: Integer): TJsonObject;
@@ -22,6 +23,7 @@ type
     destructor Destroy; override;
     class function New: IServiceClient;
     function FindAll(var iStatusCode: Integer): TJsonObject;
+    function FindByID(aID: Integer; var iStatusCode: Integer): TJsonObject;
     function Insert(aBody: TJsonObject; var iStatusCode: Integer): TJsonObject;
     function Update(aBody: TJsonObject; var iStatusCode: Integer): TJsonObject;
     function Delete(aID: Integer; var iStatusCode: Integer): TJsonObject;
@@ -172,6 +174,76 @@ begin
         iStatusCode := 400;
         Result := JSONRoot;
         doPrintLog('Erro ao Consultar Todos os Clientes.');
+      end;
+
+    end;
+  finally
+    Query.Free;
+  end;
+end;
+
+function TServiceClient.FindByID(aID: Integer; var iStatusCode: Integer)
+  : TJsonObject;
+var
+  Query: TFDQuery;
+  JSONRoot, JSONClient: TJsonObject;
+  JSONClients: TJSONArray;
+begin
+
+  Query := FDM.GetQuery;
+
+  try
+    try
+      JSONClients := TJSONArray.Create;
+
+      JSONRoot := TJsonObject.Create;
+
+      with Query do
+      begin
+        Sql.Add('select * from client where id = :id');
+        ParamByName('id').AsInteger := aID;
+        Open;
+      end;
+
+      while not Query.Eof do
+      begin
+
+        JSONClient := TJsonObject.Create;
+
+        with JSONClient, Query do
+        begin
+          AddPair('id', TJSONNumber.Create(FieldByName('id').AsInteger));
+          AddPair('name', FieldByName('name').AsString);
+
+          JSONClients.AddElement(JSONClient);
+        end;
+
+        Query.Next;
+      end;
+
+      with JSONRoot do
+      begin
+        AddPair('statuscode', '200');
+        AddPair('data', JSONClients);
+      end;
+
+      iStatusCode := 200;
+      Result := JSONRoot;
+      doPrintLog('Consultando Cliente por ID.');
+    except
+      on E: Exception do
+      begin
+
+        JSONRoot := TJsonObject.Create;
+
+        with JSONRoot do
+        begin
+          AddPair('statuscode', '400');
+          AddPair('error', E.Message);
+        end;
+        iStatusCode := 400;
+        Result := JSONRoot;
+        doPrintLog('Erro ao Consultando Cliente por ID.');
       end;
 
     end;

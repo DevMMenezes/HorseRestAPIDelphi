@@ -3,8 +3,8 @@ object uFrmMain: TuFrmMain
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Horse API'
-  ClientHeight = 250
-  ClientWidth = 584
+  ClientHeight = 252
+  ClientWidth = 721
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
