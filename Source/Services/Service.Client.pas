@@ -65,7 +65,7 @@ begin
         with JSONRoot do
         begin
           AddPair('statuscode', '200');
-          AddPair('data', 'Cliente Deletado com Sucesso');
+          AddPair('data', 'Cliente Deletado com Sucesso.');
         end;
 
         iStatusCode := 200;

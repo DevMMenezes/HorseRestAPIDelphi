@@ -3,10 +3,11 @@ unit Utils;
 interface
 
 uses
-  SysUtils, IniFiles, Classes, uMain;
+  SysUtils, IniFiles, Classes, uMain, Winapi.Windows;
 
 Procedure doSaveLog(pNomeArqLog, Msg: String);
 procedure doPrintLog(sMsg: String);
+function GetFileVersionUtils(exeName: string): string;
 
 implementation
 
@@ -47,6 +48,30 @@ begin
     end;
   finally
     loLista.Free;
+  end;
+end;
+
+function GetFileVersionUtils(exeName: string): string;
+const
+  c_StringInfo = 'StringFileInfo\040904E4\FileVersion';
+var
+  n, Len: cardinal;
+  Buf, Value: PChar;
+begin
+  Result := '';
+  n := GetFileVersionInfoSize(PChar(exeName), n);
+  if n > 0 then
+  begin
+    Buf := AllocMem(n);
+    try
+      GetFileVersionInfo(PChar(exeName), 0, n, Buf);
+      if VerQueryValue(Buf, PChar(c_StringInfo), Pointer(Value), Len) then
+      begin
+        Result := Trim(Value);
+      end;
+    finally
+      FreeMem(Buf, n);
+    end;
   end;
 end;
 

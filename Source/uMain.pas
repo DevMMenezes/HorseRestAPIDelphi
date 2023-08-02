@@ -14,15 +14,15 @@ uses
   Vcl.Dialogs,
   Vcl.StdCtrls,
   {Horse}
-  Horse,
-  Horse.Jhonson,
-  Horse.CORS,
-  Horse.ETag;
+  Horse;
 { Horse }
 
 type
   TuFrmMain = class(TForm)
     mmLog: TMemo;
+    TBIniciarParar: TButton;
+    procedure TBIniciarPararClick(Sender: TObject);
+
   private
     { Private declarations }
   public
@@ -35,18 +35,30 @@ var
 implementation
 
 uses
-  Router.Client;
+  Utils;
 
 {$R *.dfm}
+
+procedure TuFrmMain.TBIniciarPararClick(Sender: TObject);
 begin
+
   THorse.Port := 3000;
 
-  { Middlewares }
-  THorse.Use(CORS).Use(Jhonson()).Use(ETag);
+  uFrmMain.Caption := 'Horse API v' + GetFileVersionUtils(ParamStr(0));
 
-  { Carregar todas as Rotas }
-  Router.Client.LoadRouters;
+  if THorse.IsRunning then
+  begin
+    { Parar a Aplicação }
+    THorse.StopListen;
+    TBIniciarParar.Caption := 'Iniciar';
+  end
+  else
+  begin
+    { Iniciar a Aplicação }
+    THorse.Listen(THorse.Port);
+    TBIniciarParar.Caption := 'Parar';
+  end;
 
-  { Iniciar a Aplicação }
-  THorse.Listen(THorse.Port);
+end;
+
 end.

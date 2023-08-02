@@ -4,7 +4,7 @@ object uFrmMain: TuFrmMain
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Horse API'
   ClientHeight = 252
-  ClientWidth = 721
+  ClientWidth = 690
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,5 +22,14 @@ object uFrmMain: TuFrmMain
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 0
+  end
+  object TBIniciarParar: TButton
+    Left = 583
+    Top = 8
+    Width = 97
+    Height = 49
+    Caption = 'Iniciar'
+    TabOrder = 1
+    OnClick = TBIniciarPararClick
   end
 end
