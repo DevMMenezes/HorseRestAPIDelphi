@@ -14,14 +14,25 @@ uses
   Vcl.Dialogs,
   Vcl.StdCtrls,
   {Horse}
-  Horse;
+  Horse, Vcl.ExtCtrls, Vcl.Buttons;
 { Horse }
 
 type
   TuFrmMain = class(TForm)
     mmLog: TMemo;
-    TBIniciarParar: TButton;
-    procedure TBIniciarPararClick(Sender: TObject);
+    PnTituloForm: TPanel;
+    lblNomeAplicacao: TLabel;
+    Shape2: TShape;
+    Label6: TLabel;
+    Shape3: TShape;
+    Label1: TLabel;
+    Shape1: TShape;
+    pnBtnServico: TPanel;
+    btnServico: TSpeedButton;
+    Shape4: TShape;
+    procedure Label1Click(Sender: TObject);
+    procedure btnServicoClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
 
   private
     { Private declarations }
@@ -39,26 +50,35 @@ uses
 
 {$R *.dfm}
 
-procedure TuFrmMain.TBIniciarPararClick(Sender: TObject);
+procedure TuFrmMain.btnServicoClick(Sender: TObject);
 begin
-
   THorse.Port := 3000;
-
-  uFrmMain.Caption := 'Horse API v' + GetFileVersionUtils(ParamStr(0));
 
   if THorse.IsRunning then
   begin
     { Parar a Aplicação }
     THorse.StopListen;
-    TBIniciarParar.Caption := 'Iniciar';
+    pnBtnServico.Color := $006F6FFF;
+    btnServico.Caption := 'Iniciar Serviço';
   end
   else
   begin
     { Iniciar a Aplicação }
     THorse.Listen(THorse.Port);
-    TBIniciarParar.Caption := 'Parar';
+    pnBtnServico.Color := $00BFFFBF;
+    btnServico.Caption := 'Parar Serviço';
   end;
 
+end;
+
+procedure TuFrmMain.FormShow(Sender: TObject);
+begin
+  lblNomeAplicacao.Caption := 'Horse API v' + GetFileVersionUtils(ParamStr(0));
+end;
+
+procedure TuFrmMain.Label1Click(Sender: TObject);
+begin
+  Close;
 end;
 
 end.
